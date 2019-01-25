@@ -37,12 +37,16 @@ namespace CalendarDemo
                         Selectable = true,
                         BackgroundPattern = new BackgroundPattern(1)
                         {
+                            Circles = new List<Circles>
+                            {
+                                new Circles { Color = Color.Red, RelativeX=0.8f, RelativeY=0.8f, Radius=30 }
+                            },
                             Pattern = new List<Pattern>
                             {
-                                new Pattern{ WidthPercent = 1f, HightPercent = 0.25f, Color = Color.Red},
-                                new Pattern{ WidthPercent = 1f, HightPercent = 0.25f, Color = Color.Purple},
-                                new Pattern{ WidthPercent = 1f, HightPercent = 0.25f, Color = Color.Green},
-                                new Pattern{ WidthPercent = 1f, HightPercent = 0.25f, Color = Color.Yellow,Text = "Test", TextColor=Color.DarkBlue, TextSize=11, TextAlign=TextAlign.Middle}
+                                new Pattern{ WidthPercent = 1f, HeightPercent = 0.25f, Color = Color.Red},
+                                new Pattern{ WidthPercent = 1f, HeightPercent = 0.25f, Color = Color.Purple},
+                                new Pattern{ WidthPercent = 1f, HeightPercent = 0.25f, Color = Color.Green},
+                                new Pattern{ WidthPercent = 1f, HeightPercent = 0.25f, Color = Color.Yellow,Text = "Test", TextColor=Color.DarkBlue, TextSize=11, TextAlign=TextAlign.Middle}
                             }
                         }
                     },
@@ -50,7 +54,7 @@ namespace CalendarDemo
                     {
                         Selectable = true,
                         ImagePadding = 0.3,
-                        BackgroundImage = ImageSource.FromFile("icon2.png") as ImageSource
+                        BackgroundImage = ImageSource.FromFile("icon.png") as ImageSource
                     }
                 }
             };

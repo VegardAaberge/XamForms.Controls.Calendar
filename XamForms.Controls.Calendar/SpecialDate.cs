@@ -41,14 +41,16 @@ namespace XamForms.Controls
 			this.columns = columns;
 		}
 
-		public List<Pattern> Pattern;
+        public List<Circles> Circles;
+
+        public List<Pattern> Pattern;
 
 		public float GetTop(int t)
 		{
 			float r = 0;
 			for (int i = t-columns; i > -1; i-=columns)
 			{
-				r += Pattern[i].HightPercent;
+				r += Pattern[i].HeightPercent;
 			}
 			return r;
 		}
@@ -83,10 +85,18 @@ namespace XamForms.Controls
 		RightBottom = 36
 	}
 
-	public struct Pattern
+    public struct Circles
+    {
+        public float RelativeX;
+        public float RelativeY;
+        public float Radius;
+        public Color Color;
+    }
+
+    public struct Pattern
 	{
 		public float WidthPercent;
-		public float HightPercent;
+		public float HeightPercent;
 		public Color Color;
 
 		public string Text;
