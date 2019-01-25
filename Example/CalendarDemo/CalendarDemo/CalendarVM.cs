@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Windows.Input;
 using Xamarin.Forms;
+using XamForms.Controls;
 
 namespace CalendarDemo
 {
@@ -17,35 +19,48 @@ namespace CalendarDemo
 
 	public class CalendarVM : BaseViewModel
 	{
-		private DateTime? _date;
-		public DateTime? Date
-		{
-			get
-			{
-				return _date;
-			}
-			set
-			{
-				_date = value;
-				NotifyPropertyChanged(nameof(Date));
-			}
-		}
+        public CalendarVM()
+        {
+            var specialDates = new List<SpecialDate>();
+            specialDates.Add(
+                new SpecialDate(DateTime.Now.AddDays(2)) { BackgroundColor = Color.Green, TextColor = Color.Accent, BorderColor = Color.Lime, BorderWidth = 8, Selectable = true }
+            );
 
-		private ObservableCollection<XamForms.Controls.SpecialDate> attendances;
-		public ObservableCollection<XamForms.Controls.SpecialDate> Attendances
-		{
-			get { return attendances; }
-			set { attendances = value;  NotifyPropertyChanged(nameof(Attendances));}
-		}
+            specialDates.Add(
+                new SpecialDate(DateTime.Now.AddDays(3))
+                {
+                    BackgroundColor = Color.Green,
+                    TextColor = Color.Blue,
+                    Selectable = true,
+                    BackgroundPattern = new BackgroundPattern(1)
+                    {
+                        Pattern = new List<Pattern>
+                        {
+                            new Pattern{ WidthPercent = 1f, HightPercent = 0.25f, Color = Color.Red},
+                            new Pattern{ WidthPercent = 1f, HightPercent = 0.25f, Color = Color.Purple},
+                            new Pattern{ WidthPercent = 1f, HightPercent = 0.25f, Color = Color.Green},
+                            new Pattern{ WidthPercent = 1f, HightPercent = 0.25f, Color = Color.Yellow,Text = "Test", TextColor=Color.DarkBlue, TextSize=11, TextAlign=TextAlign.Middle}
+                        }
+                    }
+                }
+            );
 
-		public ICommand DateChosen
+            specialDates.Add(
+                new SpecialDate(DateTime.Now.AddDays(4))
+                {
+                    Selectable = true,
+                    BackgroundImage = FileImageSource.FromFile("icon.png") as FileImageSource
+                }
+            );
+
+            SpecialDates = new ObservableCollection<SpecialDate>(specialDates);
+        }
+
+		private ObservableCollection<SpecialDate> _specialDates;
+		public ObservableCollection<SpecialDate> SpecialDates
 		{
-			get { 
-				return new Command((obj) => { 
-					System.Diagnostics.Debug.WriteLine(obj as DateTime?);
-				});
-			}
+			get { return _specialDates; }
+			set { _specialDates = value;  NotifyPropertyChanged(nameof(_specialDates));}
 		}
-		
 	}
 }

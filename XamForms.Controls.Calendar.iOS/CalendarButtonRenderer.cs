@@ -89,13 +89,31 @@ namespace XamForms.Controls.iOS
 			Control.SetBackgroundImage(image, UIControlState.Disabled);
 		}
 
-		Task<UIImage> GetImage(FileImageSource image)
-		{
-			var handler = new FileImageSourceHandler();
-			return handler.LoadImageAsync(image);
-		}
+        Task<UIImage> GetImage(ImageSource imageSource)
+        {
+            IImageSourceHandler handler;
 
-		protected void DrawText(CGContext g, Pattern p, CGRect r)
+            if (imageSource is FileImageSource)
+            {
+                handler = new FileImageSourceHandler();
+            }
+            else if (imageSource is StreamImageSource)
+            {
+                handler = new StreamImagesourceHandler(); // sic
+            }
+            else if (imageSource is UriImageSource)
+            {
+                handler = new ImageLoaderSourceHandler(); // sic
+            }
+            else
+            {
+                throw new NotImplementedException();
+            }
+
+            return handler.LoadImageAsync(imageSource);
+        }
+
+        protected void DrawText(CGContext g, Pattern p, CGRect r)
 		{
 			if (string.IsNullOrEmpty(p.Text)) return;
 			var bounds = p.Text.StringSize(UIFont.FromName("Helvetica",p.TextSize));

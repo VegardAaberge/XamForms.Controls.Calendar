@@ -31,6 +31,7 @@ namespace XamForms.Controls
 			{
 				button.BackgroundPattern = special.BackgroundPattern;
 				button.BackgroundImage = special.BackgroundImage;
+                button.ImagePadding = special.ImagePadding;
 				if (special.FontSize.HasValue) button.FontSize = special.FontSize.Value;
 				if (special.BorderWidth.HasValue) button.BorderWidth = special.BorderWidth.Value;
 				if (special.BorderColor.HasValue) button.BorderColor = special.BorderColor.Value;

@@ -12,93 +12,116 @@ using System;
 [assembly: Xamarin.Forms.ExportRenderer(typeof(CalendarButton), typeof(CalendarButtonRenderer))]
 namespace XamForms.Controls.Droid
 {
-	[Preserve(AllMembers = true)]
-	public class CalendarButtonRenderer : ButtonRenderer
-	{
-		protected override void OnElementChanged(ElementChangedEventArgs<Xamarin.Forms.Button> e)
-		{
-			base.OnElementChanged(e);
-			if (Control == null) return;
-			Control.TextChanged += (sender, a) =>
-			{
-				var element = Element as CalendarButton;
-				if (Control.Text == element.TextWithoutMeasure || (string.IsNullOrEmpty(Control.Text) && string.IsNullOrEmpty(element.TextWithoutMeasure))) return;
-				Control.Text = element.TextWithoutMeasure;
-			};
-			Control.SetPadding(1, 1, 1, 1);
-			Control.ViewTreeObserver.GlobalLayout += (sender, args) => ChangeBackgroundPattern();
-		}
+    #pragma warning disable CS0618 // Type or member is obsolete
+    [Preserve(AllMembers = true)]
+    public class CalendarButtonRenderer : ButtonRenderer
+    {
+        protected override void OnElementChanged(ElementChangedEventArgs<Xamarin.Forms.Button> e)
+        {
+            base.OnElementChanged(e);
+            if (Control == null) return;
+            Control.TextChanged += (sender, a) =>
+            {
+                var element = Element as CalendarButton;
+                if (Control.Text == element.TextWithoutMeasure || (string.IsNullOrEmpty(Control.Text) && string.IsNullOrEmpty(element.TextWithoutMeasure))) return;
+                Control.Text = element.TextWithoutMeasure;
+            };
+            Control.SetPadding(1, 1, 1, 1);
+            Control.ViewTreeObserver.GlobalLayout += (sender, args) => ChangeBackgroundPattern();
+        }
 
-		protected override void OnElementPropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
-		{
-			base.OnElementPropertyChanged(sender, e);
-			var element = Element as CalendarButton;
+        protected override void OnElementPropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            base.OnElementPropertyChanged(sender, e);
+            var element = Element as CalendarButton;
 
-			if (e.PropertyName == nameof(element.TextWithoutMeasure) || e.PropertyName == "Renderer")
-			{
-				Control.Text = element.TextWithoutMeasure;
-			}
+            if (e.PropertyName == nameof(element.TextWithoutMeasure) || e.PropertyName == "Renderer")
+            {
+                Control.Text = element.TextWithoutMeasure;
+            }
 
-			if (e.PropertyName == nameof(Element.TextColor) || e.PropertyName == "Renderer")
-			{
-				Control.SetTextColor(Element.TextColor.ToAndroid());
-			}
+            if (e.PropertyName == nameof(Element.TextColor) || e.PropertyName == "Renderer")
+            {
+                Control.SetTextColor(Element.TextColor.ToAndroid());
+            }
 
-			if (e.PropertyName == nameof(Element.BorderWidth) || e.PropertyName == nameof(Element.BorderColor) || e.PropertyName == nameof(Element.BackgroundColor) || e.PropertyName == "Renderer")
-			{
-				if (element.BackgroundPattern == null)
-				{
-					if (element.BackgroundImage == null)
-					{
-						var drawable = new GradientDrawable();
-						drawable.SetShape(ShapeType.Rectangle);
-						var borderWidth = (int)Math.Ceiling(Element.BorderWidth);
-						drawable.SetStroke(borderWidth > 0 ? borderWidth + 1 : borderWidth, Element.BorderColor.ToAndroid());
-						drawable.SetColor(Element.BackgroundColor.ToAndroid());
-						Control.SetBackground(drawable);
-					}
-					else
-					{
-						ChangeBackgroundImage();
-					}
-				}
-				else
-				{
-					ChangeBackgroundPattern();
-				}
-			}
+            if (e.PropertyName == nameof(Element.BorderWidth) || e.PropertyName == nameof(Element.BorderColor) || e.PropertyName == nameof(Element.BackgroundColor) || e.PropertyName == "Renderer")
+            {
+                if (element.BackgroundPattern == null)
+                {
+                    if (element.BackgroundImage == null)
+                    {
+                        var drawable = new GradientDrawable();
+                        drawable.SetShape(ShapeType.Rectangle);
+                        var borderWidth = (int)Math.Ceiling(Element.BorderWidth);
+                        drawable.SetStroke(borderWidth > 0 ? borderWidth + 1 : borderWidth, Element.BorderColor.ToAndroid());
+                        drawable.SetColor(Element.BackgroundColor.ToAndroid());
+                        Control.SetBackground(drawable);
+                    }
+                    else
+                    {
+                        ChangeBackgroundImage();
+                    }
+                }
+                else
+                {
+                    ChangeBackgroundPattern();
+                }
+            }
 
-			if (e.PropertyName == nameof(element.BackgroundPattern))
-			{
-				ChangeBackgroundPattern();
-			}
+            if (e.PropertyName == nameof(element.BackgroundPattern))
+            {
+                ChangeBackgroundPattern();
+            }
 
-			if (e.PropertyName == nameof(element.BackgroundImage))
-			{
-				ChangeBackgroundImage();
-			}
-		}
+            if (e.PropertyName == nameof(element.BackgroundImage))
+            {
+                ChangeBackgroundImage();
+            }
+        }
 
-		protected async void ChangeBackgroundImage()
-		{
-			var element = Element as CalendarButton;
-			if (element == null || element.BackgroundImage == null) return;
+        protected async void ChangeBackgroundImage()
+        {
+            var element = Element as CalendarButton;
+            if (element == null || element.BackgroundImage == null) return;
 
-			var d = new List<Drawable>();
-			var image = await GetBitmap(element.BackgroundImage);
-			d.Add(new BitmapDrawable(image));
-			var drawable = new GradientDrawable();
-			drawable.SetShape(ShapeType.Rectangle);
-			var borderWidth = (int)Math.Ceiling(Element.BorderWidth);
-			drawable.SetStroke(borderWidth > 0 ? borderWidth + 1 : borderWidth, Element.BorderColor.ToAndroid());
-			drawable.SetColor(Android.Graphics.Color.Transparent);
-			d.Add(drawable);
-			var layer = new LayerDrawable(d.ToArray());
-			layer.SetLayerInset(d.Count - 1, 0, 0, 0, 0);
-			Control.SetBackground(layer);
-		}
+            var d = new List<Drawable>();
+            var image = await GetImageFromImageSource(element.BackgroundImage);
+            var scaledImage = ScaleBitmap(image, element.ImagePadding);
 
-		protected void ChangeBackgroundPattern()
+            var bitmap = new BitmapDrawable(scaledImage);
+            bitmap.Gravity = Android.Views.GravityFlags.Center;
+            d.Add(bitmap);
+
+            var drawable = new GradientDrawable();
+            drawable.SetShape(ShapeType.Rectangle);
+            var borderWidth = (int)Math.Ceiling(Element.BorderWidth);
+            drawable.SetStroke(borderWidth > 0 ? borderWidth + 1 : borderWidth, Element.BorderColor.ToAndroid());
+            drawable.SetColor(Android.Graphics.Color.Transparent);
+            d.Add(drawable);
+            var layer = new LayerDrawable(d.ToArray());
+            layer.SetLayerInset(d.Count - 1, 0, 0, 0, 0);
+            Control.SetBackground(layer);
+        }
+
+        Bitmap ScaleBitmap(Bitmap image, double imagePadding)
+        {
+            var height = Control.Height * Resources.DisplayMetrics.Density;
+            var width = Control.Width * Resources.DisplayMetrics.Density;
+
+            var yRatio = (float)height / image.Height;
+            var xRatio = (float)width / image.Width;
+
+            var ratio = Math.Min(xRatio, yRatio);
+            var paddingMultiplier = 1 / (1 - imagePadding);
+
+            int dstWidth = (int)Math.Floor(image.Width * (ratio / paddingMultiplier));
+            int dstHeight = (int)Math.Floor(image.Height * (ratio / paddingMultiplier));
+
+            return Bitmap.CreateScaledBitmap(image, dstWidth, dstHeight, false);
+        }
+
+        protected void ChangeBackgroundPattern()
 		{
 			var element = Element as CalendarButton;
 			if (element == null || element.BackgroundPattern == null || Control.Width == 0) return;
@@ -135,14 +158,33 @@ namespace XamForms.Controls.Droid
 			Control.SetBackground(layer);
 		}
 
-		Task<Bitmap> GetBitmap(FileImageSource image)
-		{
-			var handler = new FileImageSourceHandler();
-			return handler.LoadImageAsync(image, this.Control.Context);
-		}
-	}
+        private async Task<Bitmap> GetImageFromImageSource(ImageSource imageSource)
+        {
+            IImageSourceHandler handler;
 
-	public static class Calendar
+            if (imageSource is FileImageSource)
+            {
+                handler = new FileImageSourceHandler();
+            }
+            else if (imageSource is StreamImageSource)
+            {
+                handler = new StreamImagesourceHandler(); // sic
+            }
+            else if (imageSource is UriImageSource)
+            {
+                handler = new ImageLoaderSourceHandler(); // sic
+            }
+            else
+            {
+                throw new NotImplementedException();
+            }
+
+            return await handler.LoadImageAsync(imageSource, this.Control.Context);
+        }
+    }
+#pragma warning restore CS0618 // Type or member is obsolete
+
+    public static class Calendar
 	{
 		public static void Init()
 		{

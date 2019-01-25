@@ -24,13 +24,14 @@ namespace XamForms.Controls
 		/// Gets or sets the background image (only working on iOS and Android).
 		/// </summary>
 		/// <value>The background pattern.</value>
-		public FileImageSource BackgroundImage { get; set; }
+		public ImageSource BackgroundImage { get; set; }
 		/// <summary>
 		/// Gets or sets the background pattern (only working on iOS and Android).
 		/// </summary>
 		/// <value>The background pattern.</value>
 		public BackgroundPattern BackgroundPattern{ get; set; }
-	}
+        public double ImagePadding { get; set; }
+    }
 
 	public class BackgroundPattern
 	{

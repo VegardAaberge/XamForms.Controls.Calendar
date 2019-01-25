@@ -55,14 +55,22 @@ namespace XamForms.Controls
 		}
 
 		public static readonly BindableProperty BackgroundImageProperty =
-			BindableProperty.Create(nameof(BackgroundImage), typeof(FileImageSource), typeof(Button), null);
+			BindableProperty.Create(nameof(BackgroundImage), typeof(ImageSource), typeof(Button), null);
 
-		public FileImageSource BackgroundImage
+		public ImageSource BackgroundImage
 		{
-			get { return (FileImageSource)GetValue(BackgroundImageProperty); }
+			get { return (ImageSource)GetValue(BackgroundImageProperty); }
 			set { SetValue(BackgroundImageProperty, value); }	
 		}
 
+        public static readonly BindableProperty ImagePaddingProperty =
+            BindableProperty.Create(nameof(ImagePadding), typeof(double), typeof(Button), defaultValue: (double)0);
+
+        public double ImagePadding
+        {
+            get { return (double)GetValue(ImagePaddingProperty); }
+            set { SetValue(ImagePaddingProperty, value); }
+        }
     }
 }
 

@@ -48,7 +48,7 @@ namespace XamForms.Controls
 				Padding = 0,
 				VerticalOptions = LayoutOptions.Start,
 				Orientation = StackOrientation.Horizontal,
-				HeightRequest = Device.RuntimePlatform == Device.Windows ? 50 : 32,
+				HeightRequest = Device.RuntimePlatform == Device.UWP ? 50 : 32,
 				Children = { TitleLeftArrow, TitleLabel, TitleRightArrow}
 			};
 			ContentView = new StackLayout
