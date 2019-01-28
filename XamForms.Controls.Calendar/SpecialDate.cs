@@ -41,9 +41,9 @@ namespace XamForms.Controls
 			this.columns = columns;
 		}
 
-        public List<Circles> Circles;
+        public List<Circles> Circles = new List<Circles>();
 
-        public List<Pattern> Pattern;
+        public List<Pattern> Pattern = new List<Pattern>();
 
 		public float GetTop(int t)
 		{
@@ -91,6 +91,9 @@ namespace XamForms.Controls
         public float RelativeY;
         public float Radius;
         public Color Color;
+        public float BorderThickness;
+        public float Percentage;
+        public Color BorderColor;
     }
 
     public struct Pattern

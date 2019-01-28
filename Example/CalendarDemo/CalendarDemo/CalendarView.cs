@@ -39,7 +39,8 @@ namespace CalendarDemo
                         {
                             Circles = new List<Circles>
                             {
-                                new Circles { Color = Color.Red, RelativeX=0.8f, RelativeY=0.8f, Radius=30 }
+                                new Circles { Color = Color.Lime, RelativeX=0.25f, RelativeY=0.75f, Radius=35, Percentage=0.4f, BorderThickness=1 },
+                                new Circles { Color = Color.Red, RelativeX=0.75f, RelativeY=0.75f, Radius=35, Percentage=0.4f, BorderThickness=1 }
                             },
                             Pattern = new List<Pattern>
                             {

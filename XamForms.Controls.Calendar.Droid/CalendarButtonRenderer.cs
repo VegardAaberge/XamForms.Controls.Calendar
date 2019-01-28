@@ -36,10 +36,6 @@ namespace XamForms.Controls.Droid
             base.OnElementPropertyChanged(sender, e);
             var element = Element as CalendarButton;
 
-            if (element.BackgroundPattern != null && element.BackgroundPattern.Circles.Count > 0)
-            {
-            }
-
             if (e.PropertyName == nameof(element.TextWithoutMeasure) || e.PropertyName == "Renderer")
             {
                 Control.Text = element.TextWithoutMeasure;
@@ -92,19 +88,25 @@ namespace XamForms.Controls.Droid
 
             await Task.Yield();
 
-            var image = await GetImageFromImageSource(element.BackgroundImage);
-
-            var imageDrawable = new ImageDrawable
+            try
             {
-                Bitmap = image,
-                IsSelected = element.IsSelected,
-                BorderWidth = (float)element.BorderWidth,
-                BorderColor = element.BorderColor.ToAndroid(),
-                Density = Resources.DisplayMetrics.Density,
-                ImagePadding = (float)element.ImagePadding
-            };
+                var image = await GetImageFromImageSource(element.BackgroundImage);
 
-            Control.SetBackground(imageDrawable);
+                var imageDrawable = new ImageDrawable
+                {
+                    Bitmap = image,
+                    IsSelected = element.IsSelected,
+                    BorderWidth = (float)element.BorderWidth,
+                    BorderColor = element.BorderColor.ToAndroid(),
+                    Density = Resources.DisplayMetrics.Density,
+                    ImagePadding = (float)element.ImagePadding
+                };
+
+                Control.SetBackground(imageDrawable);
+            }
+            catch (Exception ex)
+            {
+            }
         }
 
         Bitmap ScaleBitmap(Bitmap image, double imagePadding)
@@ -131,17 +133,23 @@ namespace XamForms.Controls.Droid
 
             await Task.Yield();
 
-            CustomDrawable layer = new CustomDrawable
+            try
             {
-                Patterns = element.BackgroundPattern.Pattern,
-                Circles = element.BackgroundPattern.Circles,
-                IsSelected = element.IsSelected,
-                BorderColor = element.BorderColor.ToAndroid(),
-                BorderWidth = (float)element.BorderWidth,
-                Density = Resources.DisplayMetrics.Density,
-            };
+                CustomDrawable layer = new CustomDrawable
+                {
+                    Patterns = element.BackgroundPattern.Pattern,
+                    Circles = element.BackgroundPattern.Circles,
+                    IsSelected = element.IsSelected,
+                    BorderColor = element.BorderColor.ToAndroid(),
+                    BorderWidth = (float)element.BorderWidth,
+                    Density = Resources.DisplayMetrics.Density,
+                };
 
-            Control.SetBackground(layer);
+                Control.SetBackground(layer);
+            }
+            catch (Exception ex)
+            {
+            }
         }
 
         private async Task<Bitmap> GetImageFromImageSource(ImageSource imageSource)

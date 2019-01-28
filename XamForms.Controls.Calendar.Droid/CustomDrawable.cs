@@ -47,12 +47,34 @@ namespace XamForms.Controls.Droid
 
             foreach (var item in Circles)
             {
-                var paint = new Paint(PaintFlags.AntiAlias) { Color = item.Color.ToAndroid() };
+                var innerCirclePaint = new Paint(PaintFlags.AntiAlias) { Color = item.Color.ToAndroid() };
+                var innerCircleWhitePaint = new Paint(PaintFlags.AntiAlias) { Color = Color.White };
+                var outerCirclePaint = new Paint(PaintFlags.AntiAlias) { Color = item.BorderColor.ToAndroid() };
+                outerCirclePaint.SetStyle(Paint.Style.Stroke);
+
+                var strokeWidth = item.BorderThickness * Density;
+                outerCirclePaint.StrokeWidth = strokeWidth;
 
                 float cx = item.RelativeX * canvas.Width;
                 float cy = item.RelativeY * canvas.Height;
 
-                canvas.DrawCircle(cx, cy, item.Radius, paint);
+                // Draw the outer circle
+                canvas.DrawCircle(cx, cy, item.Radius + strokeWidth / 2, outerCirclePaint);
+                canvas.DrawCircle(cx, cy, item.Radius, outerCirclePaint);
+
+                var ovarRectF = new RectF
+                {
+                    Top = cy - item.Radius,
+                    Bottom = cy + item.Radius,
+                    Left = cx - item.Radius,
+                    Right = cx + item.Radius,
+                };
+
+                // Draw the inner arc
+                var angle = item.Percentage * 360;
+                canvas.DrawCircle(cx, cy, item.Radius, innerCircleWhitePaint);
+                canvas.DrawArc(ovarRectF, 270, angle, true, innerCirclePaint);
+
             }
 
             if (IsSelected)
