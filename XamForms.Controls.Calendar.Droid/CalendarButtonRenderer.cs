@@ -90,23 +90,21 @@ namespace XamForms.Controls.Droid
             var element = Element as CalendarButton;
             if (element == null || element.BackgroundImage == null) return;
 
-            var d = new List<Drawable>();
+            await Task.Yield();
+
             var image = await GetImageFromImageSource(element.BackgroundImage);
-            var scaledImage = ScaleBitmap(image, element.ImagePadding);
 
-            var bitmap = new BitmapDrawable(scaledImage);
-            bitmap.Gravity = Android.Views.GravityFlags.Center;
-            d.Add(bitmap);
+            var imageDrawable = new ImageDrawable
+            {
+                Bitmap = image,
+                IsSelected = element.IsSelected,
+                BorderWidth = (float)element.BorderWidth,
+                BorderColor = element.BorderColor.ToAndroid(),
+                Density = Resources.DisplayMetrics.Density,
+                ImagePadding = (float)element.ImagePadding
+            };
 
-            var drawable = new GradientDrawable();
-            drawable.SetShape(ShapeType.Rectangle);
-            var borderWidth = (int)Math.Ceiling(Element.BorderWidth);
-            drawable.SetStroke(borderWidth > 0 ? borderWidth + 1 : borderWidth, Element.BorderColor.ToAndroid());
-            drawable.SetColor(Android.Graphics.Color.Transparent);
-            d.Add(drawable);
-            var layer = new LayerDrawable(d.ToArray());
-            layer.SetLayerInset(d.Count - 1, 0, 0, 0, 0);
-            Control.SetBackground(layer);
+            Control.SetBackground(imageDrawable);
         }
 
         Bitmap ScaleBitmap(Bitmap image, double imagePadding)
@@ -126,32 +124,24 @@ namespace XamForms.Controls.Droid
             return Bitmap.CreateScaledBitmap(image, dstWidth, dstHeight, false);
         }
 
-        bool PreviousSelected = false;
-        protected void ChangeBackgroundPattern()
+        protected async void ChangeBackgroundPattern()
 		{
             var element = Element as CalendarButton;
             if (element == null || element.BackgroundPattern == null || Control.Width == 0) return;
 
-            if (PreviousSelected != element.IsSelected)
-            {
-                Control.SetBackground(null);
-            }
-            else
-            {
-                CustomDrawable layer = new CustomDrawable
-                {
-                    Patterns = element.BackgroundPattern.Pattern,
-                    Circles = element.BackgroundPattern.Circles,
-                    IsSelected = element.IsSelected,
-                    BorderColor = element.BorderColor.ToAndroid(),
-                    BorderWidth = (float)element.BorderWidth,
-                    Density = Resources.DisplayMetrics.Density,
-                };
+            await Task.Yield();
 
-                Control.SetBackground(layer);
-            }
+            CustomDrawable layer = new CustomDrawable
+            {
+                Patterns = element.BackgroundPattern.Pattern,
+                Circles = element.BackgroundPattern.Circles,
+                IsSelected = element.IsSelected,
+                BorderColor = element.BorderColor.ToAndroid(),
+                BorderWidth = (float)element.BorderWidth,
+                Density = Resources.DisplayMetrics.Density,
+            };
 
-            PreviousSelected = element.IsSelected;
+            Control.SetBackground(layer);
         }
 
         private async Task<Bitmap> GetImageFromImageSource(ImageSource imageSource)

@@ -170,7 +170,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\CalendarDemo\CalendarDemo.csproj">
-      <Project>{9B2230F2-9293-4C4C-A422-3CC17DA82370}</Project>
+      <Project>{153952C7-1044-4FC9-9863-B9896947F640}</Project>
       <Name>CalendarDemo</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\..\XamForms.Controls.Calendar\XamForms.Controls.Calendar.csproj">
