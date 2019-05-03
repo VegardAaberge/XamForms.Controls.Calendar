@@ -12,6 +12,7 @@ namespace CalendarDemo
         {
             var calendar = new Calendar
             {
+                BackgroundColor=Color.White,
                 MaxDate = DateTime.Now.AddDays(30),
                 MinDate = DateTime.Now.AddDays(-1),
                 //DisableDatesLimitToMaxMinRange = true,
