@@ -21,6 +21,7 @@ namespace XamForms.Controls.iOS
         protected override void OnElementPropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
             base.OnElementPropertyChanged(sender, e);
+
             var element = Element as CalendarButton;
             if (e.PropertyName == nameof(element.TextWithoutMeasure) || e.PropertyName == "Renderer")
             {
@@ -56,8 +57,17 @@ namespace XamForms.Controls.iOS
             var element = Element as CalendarButton;
             if (element == null || element.BackgroundImage == null) return;
             var image = await GetImage(element.BackgroundImage);
-            Control.SetBackgroundImage(image, UIControlState.Normal);
-            Control.SetBackgroundImage(image, UIControlState.Disabled);
+
+            var height = Control.Frame.Size.Height;
+            var width = Control.Frame.Size.Width;
+            nfloat ip = (nfloat)Math.Min(element.ImagePadding * height, element.ImagePadding * width);
+
+            var imageView = new UIImageView(image);
+            imageView.ContentMode = UIViewContentMode.ScaleAspectFit;
+            imageView.Frame = new CGRect(ip / 2, ip / 2, Control.Frame.Size.Width - ip, Control.Frame.Size.Height - ip);
+
+            Control.AddSubview(imageView);
+            Control.BringSubviewToFront(imageView);
         }
 
         protected void DrawBackgroundPattern()
