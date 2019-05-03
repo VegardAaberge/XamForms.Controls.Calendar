@@ -82,7 +82,40 @@ namespace XamForms.Controls.iOS
                     DrawText(g, p, r);
 				}
 
-				image = UIGraphics.GetImageFromCurrentImageContext();
+                for (var i = 0; i < element.BackgroundPattern.Circles.Count; i++)
+                {
+                    var item = element.BackgroundPattern.Circles[i];
+
+
+                    var radius = item.Radius / UIScreen.MainScreen.Scale * 0.6f;
+                    var x = (item.RelativeX * Control.Frame.Width);
+                    var y = (item.RelativeY * Control.Frame.Height);
+
+                    // Fill Arc
+                    nfloat startRad = (nfloat)(270 * Math.PI / 180);
+                    nfloat endRad = (nfloat)(startRad + item.Percentage * 360 * Math.PI / 180);
+
+                    var center = new CGPoint(x, y);
+                    var path = new UIBezierPath();
+                    path.MoveTo(center);
+                    path.AddArc(center, radius, startRad, endRad, true);
+                    path.ClosePath();
+
+                    g.SetFillColor(item.Color.ToCGColor());
+                    path.Fill();
+
+                    // Fill Rest Arc
+                    center = new CGPoint(x, y);
+                    path = new UIBezierPath();
+                    path.MoveTo(center);
+                    path.AddArc(center, radius, endRad, startRad, true);
+                    path.ClosePath();
+
+                    g.SetFillColor(new CGColor(255, 255, 255));
+                    path.Fill();
+                }
+
+                image = UIGraphics.GetImageFromCurrentImageContext();
 			}
 			UIGraphics.EndImageContext();
 			Control.SetBackgroundImage(image, UIControlState.Normal);
