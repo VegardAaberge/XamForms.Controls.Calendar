@@ -97,7 +97,7 @@ namespace XamForms.Controls.iOS
                     var item = element.BackgroundPattern.Circles[i];
 
 
-                    var radius = item.Radius / UIScreen.MainScreen.Scale * 0.6f;
+                    var radius = item.Radius / UIScreen.MainScreen.Scale * 0.75f;
                     var x = (item.RelativeX * Control.Frame.Width);
                     var y = (item.RelativeY * Control.Frame.Height);
 
