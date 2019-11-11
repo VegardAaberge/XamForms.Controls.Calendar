@@ -61,12 +61,6 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\XamForms.Controls.Calendar\XamForms.Controls.Calendar.csproj">
-      <Project>{DA721ED1-72ED-43EF-B909-FF4F037D6549}</Project>
-      <Name>XamForms.Controls.Calendar</Name>
-    </ProjectReference>
-  </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
   <Import Project="..\packages\Xamarin.Forms.4.3.0.947036\build\Xamarin.Forms.targets" Condition="Exists('..\packages\Xamarin.Forms.4.3.0.947036\build\Xamarin.Forms.targets')" />
 </Project>
